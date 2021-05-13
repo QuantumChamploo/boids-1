@@ -1,11 +1,24 @@
 // Size of canvas. These get updated to fill the whole browser.
 let width = 150;
 let height = 150;
+var count = 0;
 
 const numBoids = 100;
 const visualRange = 75;
 
+
 var boids = [];
+
+function addBoid(){
+  boids.push({
+    x: Math.random() * width,
+    y: Math.random() * height,
+    dx: Math.random() * 10 - 5,
+    dy: Math.random() * 10 - 5,
+    history: [],
+  });
+
+}
 
 function initBoids() {
   for (var i = 0; i < numBoids; i += 1) {
@@ -40,6 +53,7 @@ function nClosestBoids(boid, n) {
 // size and width/height variables.
 function sizeCanvas() {
   const canvas = document.getElementById("boids");
+  //document.write(canvas)
   width = window.innerWidth;
   height = window.innerHeight;
   canvas.width = width;
@@ -178,6 +192,9 @@ function drawBoid(ctx, boid) {
 
 // Main animation loop
 function animationLoop() {
+  document.getElementById("clicker").innerHTML = width.toString();
+  //count += 1;
+
   // Update each boid
   for (let boid of boids) {
     // Update the velocities according to each rule
@@ -204,8 +221,25 @@ function animationLoop() {
   // Schedule the next frame
   window.requestAnimationFrame(animationLoop);
 }
+//New stuffs
+
+
+function myFunction() {
+  document.getElementById("demo").innerHTML = "YOU CLICKED ME!";
+}
+
+function clickerAdd(){
+  count += 1;
+}
+//End
+
 
 window.onload = () => {
+
+  document.getElementById("demo").onclick = function() {addBoid()};
+  document.getElementById("clicker").onclick = function() {clickerAdd()};
+  document.getElementById("clicker").innerHTML = count.toString();
+  //count += 1;
   // Make sure the canvas always fills the whole window
   window.addEventListener("resize", sizeCanvas, false);
   sizeCanvas();
@@ -215,4 +249,5 @@ window.onload = () => {
 
   // Schedule the main animation loop
   window.requestAnimationFrame(animationLoop);
+
 };
