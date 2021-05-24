@@ -9,6 +9,19 @@ const visualRange = 75;
 
 var boids = [];
 
+var terrain = [];
+
+function addRectangle(xPos,yPos,wid,heig,col){
+  terrain.push({
+    x : xPos,
+    y : yPos,
+    width : wid,
+    height : heig,
+    color : col,
+    });
+  
+}
+
 function addBoid(){
   boids.push({
     x: Math.random() * width,
@@ -20,7 +33,7 @@ function addBoid(){
 
 }
 
-function initBoids() {
+function initBoids(color) {
   for (var i = 0; i < numBoids; i += 1) {
     boids[boids.length] = {
       x: Math.random() * width,
@@ -28,9 +41,12 @@ function initBoids() {
       dx: Math.random() * 10 - 5,
       dy: Math.random() * 10 - 5,
       history: [],
+      color: color,
     };
   }
 }
+
+
 
 function distance(boid1, boid2) {
   return Math.sqrt(
@@ -58,6 +74,22 @@ function sizeCanvas() {
   height = window.innerHeight;
   canvas.width = width;
   canvas.height = height;
+}
+
+function collisionDect(boid){
+  for(let rect of terrain){
+    if(boid.x < rect.x + rect.width &&
+   boid.x  > rect.x &&
+   boid.y < rect.y + rect.height &&
+   boid.y  > rect.y){
+      boid.color = 'green';
+      const index = boids.indexOf(boid);
+      if(index > -1){
+        boids.splice(index,1);
+      }
+
+    }
+  }
 }
 
 // Constrain a boid to within the window. If it gets too close to an edge,
@@ -170,7 +202,8 @@ function drawBoid(ctx, boid) {
   ctx.translate(boid.x, boid.y);
   ctx.rotate(angle);
   ctx.translate(-boid.x, -boid.y);
-  ctx.fillStyle = "#558cf4";
+  //ctx.fillStyle = "#558cf4";
+  ctx.fillStyle = boid.color;
   ctx.beginPath();
   ctx.moveTo(boid.x, boid.y);
   ctx.lineTo(boid.x - 15, boid.y + 5);
@@ -190,6 +223,18 @@ function drawBoid(ctx, boid) {
   }
 }
 
+function drawRectangle(ctx,rect){
+  ctx.beginPath();
+  //ctx.fillStyle('green');
+  //ctx.rect(rect.x, rect.y, rect.width, rect.height);
+  ctx.fillStyle = rect.color;
+  ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+  //ctx.fillRect(20, 20, 150, 100);
+  //ctx.fill(rect.color)
+  ctx.stroke();
+
+}
+
 // Main animation loop
 function animationLoop() {
   document.getElementById("clicker").innerHTML = width.toString();
@@ -203,6 +248,7 @@ function animationLoop() {
     matchVelocity(boid);
     limitSpeed(boid);
     keepWithinBounds(boid);
+    collisionDect(boid);
 
     // Update the position based on the current velocity
     boid.x += boid.dx;
@@ -217,6 +263,10 @@ function animationLoop() {
   for (let boid of boids) {
     drawBoid(ctx, boid);
   }
+  for (let rect of terrain){
+    drawRectangle(ctx,rect);
+  }
+
 
   // Schedule the next frame
   window.requestAnimationFrame(animationLoop);
@@ -245,7 +295,9 @@ window.onload = () => {
   sizeCanvas();
 
   // Randomly distribute the boids to start
-  initBoids();
+  initBoids("red");
+  addRectangle(700,50,150,300,"blue")
+  addRectangle(100,50,150,300,"blue")
 
   // Schedule the main animation loop
   window.requestAnimationFrame(animationLoop);
