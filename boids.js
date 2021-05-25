@@ -11,6 +11,84 @@ var boids = [];
 
 var terrain = [];
 
+var active = false;
+var currentX;
+var currentY;
+var initialX;
+var initialY;
+var xOffset = 0;
+var yOffset = 0;
+
+var headerOffset = 190
+
+
+
+function dragStart(e) {
+  if (e.type === "touchstart") {
+    initialX = e.touches[0].clientX - xOffset;
+    initialY = e.touches[0].clientY - yOffset;
+  } else {
+    //addBoid('green');
+    initialX = e.clientX;
+    initialY = e.clientY;
+    addBoid('white');
+  }
+  document.getElementById('output').innerHTML = e.clientX;
+  document.getElementById('output2').innerHTML = e.clientY;
+  for(let rect of terrain){
+    if(e.clientX < rect.x + rect.width && e.clientX  > rect.x && e.clientY < rect.y + rect.height && e.clientY  > rect.y){
+      addBoid('orange');
+    }
+  }
+
+  active = true;
+}
+
+function dragEnd(e) {
+  initialX = currentX;
+  initialY = currentY;
+  addBoid('black');
+  active = false;
+}
+
+function drag(e){
+  // if(e.clientX < rect.x + rect.width && e.clientX  > rect.x && e.clientY < rect.y + rect.height && e.clientY  > rect.y){
+  //   addBoid('white');
+  //   }
+  // //addBoid('green');
+  if (active){
+    e.preventDefault();
+
+    //addBoid('green');
+    if(e.type === "touchmove"){
+      // something soon
+    } else {
+      deltaX = e.clientX - initialX;
+      deltaY = e.clientY - initialY;
+    }
+      //something
+    for(let rect of terrain){
+      addBoid('green');
+      //addBoid('green');
+      if(e.clientX < rect.x + rect.width && e.clientX  > rect.x && e.clientY - headerOffset < rect.y + rect.height && e.clientY - headerOffset  > rect.y){
+        //addBoid('green');
+        rect.x += deltaX;
+        rect.y += deltaY;
+        //document.getElementById('output').innerHTML = e.clientX;
+        addBoid("purple");
+
+    }
+   }
+
+    initialX = e.clientX;
+    initialY = e.clientY;
+    yOffset = currentX;
+    yOffset = currentY;
+  }
+}
+
+
+
 function addRectangle(xPos,yPos,wid,heig,col){
   terrain.push({
     x : xPos,
@@ -22,15 +100,27 @@ function addRectangle(xPos,yPos,wid,heig,col){
   
 }
 
-function addBoid(){
+function addBoid(col){
   boids.push({
-    x: Math.random() * width,
-    y: Math.random() * height,
+    x: Math.random() * 10 + 500,
+    y: Math.random() * 10 + 700,
     dx: Math.random() * 10 - 5,
     dy: Math.random() * 10 - 5,
     history: [],
+    color: col,
   });
 
+}
+
+function addBoid2(e){
+  addBoid('red');
+
+}
+
+function boidTeam(num,col){
+  for(var i = 0; i < num; i +=1){
+    addBoid(col);
+  }
 }
 
 function initBoids(color) {
@@ -83,6 +173,8 @@ function collisionDect(boid){
    boid.y < rect.y + rect.height &&
    boid.y  > rect.y){
       boid.color = 'green';
+      //addBoid('orange');
+      //rect.x += 100;
       const index = boids.indexOf(boid);
       if(index > -1){
         boids.splice(index,1);
@@ -122,10 +214,12 @@ function flyTowardsCenter(boid) {
   let numNeighbors = 0;
 
   for (let otherBoid of boids) {
-    if (distance(boid, otherBoid) < visualRange) {
-      centerX += otherBoid.x;
-      centerY += otherBoid.y;
-      numNeighbors += 1;
+    if(otherBoid.color == boid.color){
+      if (distance(boid, otherBoid) < visualRange) {
+        centerX += otherBoid.x;
+        centerY += otherBoid.y;
+        numNeighbors += 1;
+      }
     }
   }
 
@@ -145,10 +239,12 @@ function avoidOthers(boid) {
   let moveX = 0;
   let moveY = 0;
   for (let otherBoid of boids) {
-    if (otherBoid !== boid) {
-      if (distance(boid, otherBoid) < minDistance) {
-        moveX += boid.x - otherBoid.x;
-        moveY += boid.y - otherBoid.y;
+    if(otherBoid.color == boid.color){
+      if (otherBoid !== boid) {
+        if (distance(boid, otherBoid) < minDistance) {
+          moveX += boid.x - otherBoid.x;
+          moveY += boid.y - otherBoid.y;
+        }
       }
     }
   }
@@ -167,10 +263,12 @@ function matchVelocity(boid) {
   let numNeighbors = 0;
 
   for (let otherBoid of boids) {
-    if (distance(boid, otherBoid) < visualRange) {
-      avgDX += otherBoid.dx;
-      avgDY += otherBoid.dy;
-      numNeighbors += 1;
+    if(otherBoid.color == boid.color){
+      if (distance(boid, otherBoid) < visualRange) {
+        avgDX += otherBoid.dx;
+        avgDY += otherBoid.dy;
+        numNeighbors += 1;
+      }
     }
   }
 
@@ -280,15 +378,29 @@ function myFunction() {
 
 function clickerAdd(){
   count += 1;
+  document.getElementById("clicker").innerHTML = count.toString();
 }
 //End
 
 
 window.onload = () => {
 
-  document.getElementById("demo").onclick = function() {addBoid()};
-  document.getElementById("clicker").onclick = function() {clickerAdd()};
-  document.getElementById("clicker").innerHTML = count.toString();
+  document.getElementById("demo").onclick = function() {addBoid('green')};
+  document.getElementById("dump").onclick = function() {boidTeam(20,'blue')};
+  //document.getElementById("clicker").onclick = function() {clickerAdd()};
+  document.getElementById("clicker").innerHTML = 'test';
+  document.getElementById('output').innerHTML = 'ending';
+
+  //document.addEventListener("mousedown",addBoid2, false);
+
+
+  document.addEventListener("touchstart", dragStart, false);
+  document.addEventListener("touchend", dragEnd, false);
+
+  document.addEventListener("mousedown", dragStart, false);
+  document.addEventListener("mouseup", dragEnd, false);
+  document.addEventListener("mousemove", drag, false);
+
   //count += 1;
   // Make sure the canvas always fills the whole window
   window.addEventListener("resize", sizeCanvas, false);
@@ -297,7 +409,7 @@ window.onload = () => {
   // Randomly distribute the boids to start
   initBoids("red");
   addRectangle(700,50,150,300,"blue")
-  addRectangle(100,50,150,300,"blue")
+  addRectangle(100,0,150,300,"blue")
 
   // Schedule the main animation loop
   window.requestAnimationFrame(animationLoop);
