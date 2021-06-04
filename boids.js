@@ -19,14 +19,14 @@ var initialY;
 var xOffset = 0;
 var yOffset = 0;
 
-var headerOffset = 190
+var headerOffset = 190;
 
 
 
 function dragStart(e) {
   if (e.type === "touchstart") {
-    initialX = e.touches[0].clientX - xOffset;
-    initialY = e.touches[0].clientY - yOffset;
+    initialX = e.touches[0].clientX;
+    initialY = e.touches[0].clientY;
   } else {
     //addBoid('green');
     initialX = e.clientX;
@@ -62,6 +62,8 @@ function drag(e){
     //addBoid('green');
     if(e.type === "touchmove"){
       // something soon
+      deltaX = e.clientX[0] - initialX;
+      deltaY = e.clientY[0] - initialY;
     } else {
       deltaX = e.clientX - initialX;
       deltaY = e.clientY - initialY;
@@ -194,7 +196,7 @@ function keepWithinBounds(boid) {
     boid.dx += turnFactor;
   }
   if (boid.x > width - margin) {
-    boid.dx -= turnFactor
+    boid.dx -= turnFactor;
   }
   if (boid.y < margin) {
     boid.dy += turnFactor;
@@ -396,6 +398,7 @@ window.onload = () => {
 
   document.addEventListener("touchstart", dragStart, false);
   document.addEventListener("touchend", dragEnd, false);
+  document.addEventListener("touchmove", drag, false);
 
   document.addEventListener("mousedown", dragStart, false);
   document.addEventListener("mouseup", dragEnd, false);
