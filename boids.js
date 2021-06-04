@@ -27,16 +27,17 @@ function dragStart(e) {
   if (e.type === "touchstart") {
     initialX = e.touches[0].clientX;
     initialY = e.touches[0].clientY;
+    addBoid('blue');
   } else {
     //addBoid('green');
     initialX = e.clientX;
     initialY = e.clientY;
     addBoid('white');
   }
-  document.getElementById('output').innerHTML = e.clientX;
-  document.getElementById('output2').innerHTML = e.clientY;
+  document.getElementById('output').innerHTML = initialX;
+  document.getElementById('output2').innerHTML = initialY;
   for(let rect of terrain){
-    if(e.clientX < rect.x + rect.width && e.clientX  > rect.x && e.clientY < rect.y + rect.height && e.clientY  > rect.y){
+    if(initialX < rect.x + rect.width && initialX  > rect.x && initialY < rect.y + rect.height && initialY  > rect.y){
       addBoid('orange');
     }
   }
@@ -64,15 +65,20 @@ function drag(e){
       // something soon
       deltaX = e.clientX[0] - initialX;
       deltaY = e.clientY[0] - initialY;
+      hldX = e.clientX[0];
+      hldY = e.clientY[0];
+      addBoid('grey');
     } else {
       deltaX = e.clientX - initialX;
       deltaY = e.clientY - initialY;
+      hldX = e.clientX;
+      hldY = e.clientY;
     }
       //something
     for(let rect of terrain){
       addBoid('green');
       //addBoid('green');
-      if(e.clientX < rect.x + rect.width && e.clientX  > rect.x && e.clientY - headerOffset < rect.y + rect.height && e.clientY - headerOffset  > rect.y){
+      if(hldX < rect.x + rect.width && hldX  > rect.x && hldY - headerOffset < rect.y + rect.height && hldY - headerOffset  > rect.y){
         //addBoid('green');
         rect.x += deltaX;
         rect.y += deltaY;
@@ -82,8 +88,8 @@ function drag(e){
     }
    }
 
-    initialX = e.clientX;
-    initialY = e.clientY;
+    initialX = hldX;
+    initialY = hldY;
     yOffset = currentX;
     yOffset = currentY;
   }
