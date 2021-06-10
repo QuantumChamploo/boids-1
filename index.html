@@ -11,13 +11,31 @@
         overflow: hidden;
       }
     </style>
+    <style>
+    	.flex-container {
+    		display:flex;
+    		background-color: DodgerBlue;
+    	}
+    	.flex-container > div{
+    		background-color: #f1f1f1;
+    		margin:10px;
+    		padding:20px;
+    		font-size:30px;
+    	}
+    </style>
   </head>
   <body>
-    <p id="demo">Click me.</p>
-    <p id="dump">BigBoidDrop</p>
-    <p id='clicker'>start</p>
-    <p id='output'>begin</p>
-    <p style="background-color:tomato;" id='output2'>begin</p>
+    <!-- <p id="demo">Click me.</p> -->
+    <!--<p id="dump">BigBoidDrop</p> 
+    <p id='clicker'>start</p> -->
+    <!--<p id='output'>begin</p>
+    <p style="background-color:tomato;" id='output2'>begin</p> -->
+    <div class="flex-container">
+    	<div id="demo">1</div>
+    	<div id="dump">bigDrop</div>
+    	<div id="output">3</div>
+    	<div id="output2">Y</div>
+    </div>
     <canvas id="boids" width="150" height="150"></canvas>
   </body>
 </html>

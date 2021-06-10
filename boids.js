@@ -19,7 +19,7 @@ var initialY;
 var xOffset = 0;
 var yOffset = 0;
 
-var headerOffset = 190;
+var headerOffset = 100;
 
 
 
@@ -343,7 +343,7 @@ function drawRectangle(ctx,rect){
 
 // Main animation loop
 function animationLoop() {
-  document.getElementById("clicker").innerHTML = width.toString();
+  //document.getElementById("clicker").innerHTML = width.toString();
   //count += 1;
 
   // Update each boid
@@ -386,7 +386,7 @@ function myFunction() {
 
 function clickerAdd(){
   count += 1;
-  document.getElementById("clicker").innerHTML = count.toString();
+  //document.getElementById("clicker").innerHTML = count.toString();
 }
 //End
 
@@ -396,7 +396,7 @@ window.onload = () => {
   document.getElementById("demo").onclick = function() {addBoid('green')};
   document.getElementById("dump").onclick = function() {boidTeam(20,'blue')};
   //document.getElementById("clicker").onclick = function() {clickerAdd()};
-  document.getElementById("clicker").innerHTML = 'test';
+  //document.getElementById("clicker").innerHTML = 'test';
   document.getElementById('output').innerHTML = 'ending';
 
   //document.addEventListener("mousedown",addBoid2, false);
