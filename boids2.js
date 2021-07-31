@@ -18,6 +18,7 @@ var initialX;
 var initialY;
 var xOffset = 0;
 var yOffset = 0;
+var killed = 0;
 
 var headerOffset = 100;
 
@@ -34,8 +35,8 @@ function dragStart(e) {
     initialY = e.clientY;
     addBoid('white');
   }
-  document.getElementById('output').innerHTML = initialX;
-  document.getElementById('output2').innerHTML = initialY;
+  //document.getElementById('output').innerHTML = initialX;
+  //document.getElementById('output2').innerHTML = initialY;
   for(let rect of terrain){
     if(initialX < rect.x + rect.width && initialX  > rect.x && initialY < rect.y + rect.height && initialY  > rect.y){
       addBoid('orange');
@@ -185,6 +186,8 @@ function collisionDect(boid){
       //rect.x += 100;
       const index = boids.indexOf(boid);
       if(index > -1){
+        killed += 1;
+        document.getElementById('output2').innerHTML = killed;
         boids.splice(index,1);
       }
 
@@ -397,7 +400,7 @@ window.onload = () => {
   document.getElementById("dump").onclick = function() {boidTeam(20,'blue')};
   //document.getElementById("clicker").onclick = function() {clickerAdd()};
   //document.getElementById("clicker").innerHTML = 'test';
-  document.getElementById('output').innerHTML = 'ending';
+  document.getElementById('output').innerHTML = 'Boids killed:';
 
   //document.addEventListener("mousedown",addBoid2, false);
 
