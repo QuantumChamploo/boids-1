@@ -22,13 +22,15 @@ var killed = 0;
 
 var headerOffset = 100;
 
+console.log("am i here??");
+
 
 
 function dragStart(e) {
   if (e.type === "touchstart") {
     initialX = e.touches[0].clientX;
     initialY = e.touches[0].clientY;
-    addBoid('blue');
+    addBoid('green');
   } else {
     //addBoid('green');
     initialX = e.clientX;
@@ -54,21 +56,23 @@ function dragEnd(e) {
 }
 
 function drag(e){
+  //console.log("in drag pre touchmove");
   // if(e.clientX < rect.x + rect.width && e.clientX  > rect.x && e.clientY < rect.y + rect.height && e.clientY  > rect.y){
   //   addBoid('white');
   //   }
   // //addBoid('green');
   if (active){
+  //if(true){
     e.preventDefault();
 
     //addBoid('green');
     if(e.type === "touchmove"){
-      // something soon
-      deltaX = e.clientX[0] - initialX;
-      deltaY = e.clientY[0] - initialY;
-      hldX = e.clientX[0];
-      hldY = e.clientY[0];
-      addBoid('grey');
+
+      deltaX = e.touches[0].clientX - initialX;
+      deltaY = e.touches[0].clientY - initialY;
+      hldX = e.touches[0].clientX;
+      hldY = e.touches[0].clientY;
+
     } else {
       deltaX = e.clientX - initialX;
       deltaY = e.clientY - initialY;
@@ -106,7 +110,7 @@ function addRectangle(xPos,yPos,wid,heig,col){
     height : heig,
     color : col,
     });
-  
+
 }
 
 function addBoid(col){
@@ -384,6 +388,8 @@ function animationLoop() {
 
 
 function myFunction() {
+  addBoid("orange")
+  addBoid("green")
   //document.getElementById("demo").innerHTML = "YOU CLICKED ME!";
 }
 
@@ -396,6 +402,7 @@ function clickerAdd(){
 
 window.onload = () => {
 
+
   //document.getElementById("demo").onclick = function() {addBoid('green')};
   document.getElementById("dump").onclick = function() {boidTeam(20,'blue')};
   //document.getElementById("clicker").onclick = function() {clickerAdd()};
@@ -407,7 +414,7 @@ window.onload = () => {
 
   document.addEventListener("touchstart", dragStart, false);
   document.addEventListener("touchend", dragEnd, false);
-  document.addEventListener("touchmove", drag, false);
+  document.addEventListener("touchmove", drag, {passive: false });
 
   document.addEventListener("mousedown", dragStart, false);
   document.addEventListener("mouseup", dragEnd, false);
@@ -420,8 +427,8 @@ window.onload = () => {
 
   // Randomly distribute the boids to start
   initBoids("red");
-  addRectangle(700,50,150,300,"blue")
-  addRectangle(100,0,150,300,"blue")
+  addRectangle(700,50,150,300,"#53039F")
+  addRectangle(300,50,150,300,"#53039F")
 
   // Schedule the main animation loop
   window.requestAnimationFrame(animationLoop);
